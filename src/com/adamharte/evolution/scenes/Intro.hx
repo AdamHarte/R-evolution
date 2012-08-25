@@ -17,6 +17,8 @@ class Intro extends AScene
 		super._init();
 		_kernel.session = _kernel.factory.createSession( "Basic" );
 		
+		_kernel.audio.isMute = true;
+		
 		var l_result:Text = new Text( _kernel, _kernel.factory.width, 50, _kernel.getConfig( "gui.scenes.intro.instructions" ), _kernel.factory.createTextStyle( ETextStyle.SUBHEAD ) );
 		l_result.y = 70;
 		addEntity( l_result, true, 2 );

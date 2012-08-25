@@ -3,6 +3,7 @@ import awe6.core.AAssetManager;
 import awe6.core.View;
 import awe6.extras.gui.BitmapDataScale9;
 import awe6.interfaces.IView;
+import haxe.xml.Fast;
 import nme.Assets;
 import nme.display.Bitmap;
 import nme.display.BitmapData;
@@ -30,8 +31,8 @@ class AssetManager extends AAssetManager
 	public var background( default, null ):IView;
 	public var buttonUp( default, null ):BitmapData;
 	public var buttonOver( default, null ):BitmapData;
-	public var sphere( default, null ):BitmapData;
 	public var font( default, null ):Font;
+	public var levelData( default, null ):Xml;
 	
 	
 	override private function _init():Void
@@ -51,8 +52,9 @@ class AssetManager extends AAssetManager
 		background = _createView( BACKGROUND );
 		buttonUp = Assets.getBitmapData( "assets/ButtonUp.png" );
 		buttonOver = Assets.getBitmapData( "assets/ButtonOver.png" );
-		sphere = Assets.getBitmapData( "assets/Sphere.png" );
 		font = Assets.getFont( "assets/fonts/orbitron.ttf" );
+		levelData = Xml.parse(Assets.getText("assets/levels/levels.xml"));
+		
 	}
 	
 	
@@ -110,6 +112,27 @@ class AssetManager extends AAssetManager
 		return super.getAsset( p_id, p_packageId, p_args );
 	}
 	
+	public function getViewAsset ( p_id: EAsset ) : IView
+	{
+		return _createView(p_id);
+	}
+	
+	public function getLevelData(p_levelIndex:Int):Xml 
+	{
+		var resultLevel:Xml = null;
+		var levelData:Fast = new Fast(levelData.firstElement()).node.levels;
+		
+		for (level in levelData.nodes.level) 
+		{
+			if (level.has.id && Std.parseInt(level.att.id) == p_levelIndex) 
+			{
+				resultLevel = level.x;
+			}
+		}
+		
+		return resultLevel;
+	}
+	
 	
 	
 	private function _createView( p_type:EAsset ):IView
@@ -120,34 +143,29 @@ class AssetManager extends AAssetManager
 		switch( p_type )
 		{
 			#if !js
-			case OVERLAY_BACKGROUND :
-				l_bitmap.bitmapData = new BitmapDataScale9( Assets.getBitmapData( "assets/overlay/OverlayBackground.png" ), 110, 20, 550, 350, _kernel.factory.width, _kernel.factory.height, true );
+			case OVERLAY_BACKGROUND 	: l_bitmap.bitmapData = new BitmapDataScale9( Assets.getBitmapData( "assets/overlay/OverlayBackground.png" ), 110, 20, 550, 350, _kernel.factory.width, _kernel.factory.height, true );
 			#else
-			case OVERLAY_BACKGROUND :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/OverlayBackground.png" );
+			case OVERLAY_BACKGROUND 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/OverlayBackground.png" );
 			#end
-			case OVERLAY_BACK_UP :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/BackUp.png" );
-			case OVERLAY_BACK_OVER :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/BackOver.png" );
-			case OVERLAY_MUTE_UP :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/MuteUp.png" );
-			case OVERLAY_MUTE_OVER :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/MuteOver.png" );
-			case OVERLAY_UNMUTE_UP :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnmuteUp.png" );
-			case OVERLAY_UNMUTE_OVER :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnmuteOver.png" );
-			case OVERLAY_PAUSE_UP :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseUp.png" );
-			case OVERLAY_PAUSE_OVER :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseOver.png" );
-			case OVERLAY_UNPAUSE_UP :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseUp.png" );
-			case OVERLAY_UNPAUSE_OVER :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseOver.png" );
-			case BACKGROUND :
-				l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/Background.png" );
+			case OVERLAY_BACK_UP 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/BackUp.png" );
+			case OVERLAY_BACK_OVER 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/BackOver.png" );
+			case OVERLAY_MUTE_UP 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/MuteUp.png" );
+			case OVERLAY_MUTE_OVER 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/MuteOver.png" );
+			case OVERLAY_UNMUTE_UP 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnmuteUp.png" );
+			case OVERLAY_UNMUTE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnmuteOver.png" );
+			case OVERLAY_PAUSE_UP 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseUp.png" );
+			case OVERLAY_PAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseOver.png" );
+			case OVERLAY_UNPAUSE_UP 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseUp.png" );
+			case OVERLAY_UNPAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseOver.png" );
+			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/Background.png" );
+			
+			case CLOUDS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/clouds.png" );
+			
+			case DUDE_STAND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
+			case DUDE_RUN 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
+			case DUDE_JUMP 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
+			case DUDE_SLEEP 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
+			
 		}
 		return new View( _kernel, l_sprite );
 	}
@@ -168,4 +186,11 @@ enum EAsset
 	OVERLAY_UNPAUSE_UP;
 	OVERLAY_UNPAUSE_OVER;
 	BACKGROUND;
+	
+	CLOUDS;
+	
+	DUDE_STAND;
+	DUDE_RUN;
+	DUDE_JUMP;
+	DUDE_SLEEP;
 }

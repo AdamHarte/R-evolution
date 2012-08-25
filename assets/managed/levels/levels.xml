@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+<levels>
+	<level id="0">
+		<player start_x="100" start_y="200" />
+		<bodies>
+			<!--<body type="{1:wheel}" x="{x}" y="{y}" size="{radius}" speed="{pi-radians per second}" />-->
+			<body type="1" x="100" y="500" size="250" speed="0.5" />
+			<body type="1" x="450" y="300" size="50" speed="-0.3" />
+			<body type="1" x="700" y="400" size="130" speed="0.8" />
+			<body type="1" x="1050" y="280" size="100" speed="0.2" />
+			<body type="1" x="1250" y="195" size="40" speed="-0.2" />
+			<body type="1" x="1450" y="195" size="40" speed="-0.2" />
+			<body type="1" x="1650" y="195" size="40" speed="-0.2" />
+			<body type="1" x="2000" y="300" size="60" speed="0.5" />
+		</bodies>
+	</level>
+</levels>
+</data>

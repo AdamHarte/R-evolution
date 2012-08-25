@@ -5,6 +5,9 @@ import awe6.interfaces.EAudioChannel;
 import awe6.interfaces.EScene;
 import awe6.interfaces.ETextStyle;
 import awe6.interfaces.IKernel;
+import com.adamharte.evolution.actors.Clouds;
+import com.adamharte.evolution.actors.Dude;
+import com.adamharte.evolution.actors.Level;
 import com.adamharte.evolution.AssetManager;
 import com.adamharte.evolution.Session;
 
@@ -15,7 +18,7 @@ import com.adamharte.evolution.Session;
 
 class Game extends Scene
 {
-	public static inline var TIME_LIMIT = 30;
+	public static inline var TIME_LIMIT = 30; // Seconds.
 	
 	private var _session:Session;
 	private var _assetManager:AssetManager;
@@ -49,6 +52,15 @@ class Game extends Scene
 		{
 			addEntity( new Sphere( _kernel ), true, i + 10 );
 		}*/
+		
+		var clouds:Clouds = new Clouds(_kernel);
+		addEntity(clouds, true, 1);
+		
+		var level:Level = new Level(_kernel, _assetManager.getLevelData(_session.currentLevel));
+		addEntity(level, true, 2);
+		
+		//var dude:Dude = new Dude(_kernel);
+		//addEntity(dude, true, 3);
 		
 	}
 	
