@@ -4,6 +4,7 @@ import awe6.interfaces.IKernel;
 import awe6.interfaces.EJoypadButton;
 import com.adamharte.evolution.AssetManager;
 import haxe.xml.Fast;
+import com.adamharte.evolution.actors.Wheel;
 
 /**
  * ...
@@ -39,7 +40,8 @@ class Level extends PositionableEntity
 			var wheelY:Float = Std.parseFloat(body.att.y);
 			var radius:Float = Std.parseFloat(body.att.size);
 			var rotationSpeed:Float = Std.parseFloat(body.att.speed);
-			var wheel:Wheel = new Wheel(_kernel, radius, rotationSpeed);
+			var wheelType:EWheelType = getWheelType( Std.parseInt(body.att.type) );
+			var wheel:Wheel = new Wheel(_kernel, radius, rotationSpeed, wheelType);
 			wheel.setPosition(wheelX, wheelY);
 			_wheels.push(wheel);
 			addEntity(wheel, true, 1);
@@ -52,23 +54,14 @@ class Level extends PositionableEntity
 		_dude.setPosition(playerStartX, playerStartY);
 		addEntity(_dude, true, 3);
 		
+		setPosition(0, 0);
 	}
 		
 	override private function _updater( ?p_deltaTime:Int = 0 ):Void 
 	{
 		super._updater( p_deltaTime );
-		/*for (l_image in _images) 
-		{
-			l_image.x -= _speed * ( p_deltaTime * .001 ); // keeps _speed constant
-			if ( l_image.x <= -_width) {
-				var l_offset =  l_image.x + _width;
-				l_image.x = _width + l_offset;
-			}
-		}*/
 		
-		
-		//TODO: Test for player/wheel collisions.
-		
+		// Test for player/wheel collisions.
 		for (wheel in _wheels) 
 		{
 			var dx:Float = wheel.x - _dude.x;
@@ -78,44 +71,8 @@ class Level extends PositionableEntity
 			
 			if (dist < maxDist) 
 			{
-				/*if (!wheel.isTouching) 
-				{
-					_dude.resetVelociyY();
-				}*/
 				wheel.isTouching = true;
-				//var angleBetween:Float = Math.atan2(dy, dx);// * (180 / Math.PI);
-				//_dude.setRotation(angleBetween * (180 / Math.PI) - 90);
 				_dude.attachToWheel(wheel);
-				
-				//var moveDelta:Float = 0;
-				
-				// listen to virtual joypad
-				/*if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.RIGHT ))
-				{
-					//_dx += _speed * l_adjustedDelta;
-					moveDelta += _dude.runAcceleration;
-				}
-				if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.LEFT ))
-				{
-					//_dx -= _speed * l_adjustedDelta;
-					moveDelta -= _dude.runAcceleration;
-				}*/
-				
-				/*var maxDistSqrt:Float = Math.sqrt(maxDist);
-				var op:Float = Math.sin(angleBetween + moveDelta + Math.PI) * maxDistSqrt;
-				var ad:Float = Math.cos(angleBetween + moveDelta + Math.PI) * maxDistSqrt;
-				_dude.setPosition(wheel.x + ad, wheel.y + op);*/
-				
-				/*if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ))
-				{
-					//_dx += _speed * l_adjustedDelta;
-					var jumpPower:Float = 9;
-					_dude.setVelocity(Math.cos(angleBetween + Math.PI) * jumpPower, Math.sin(angleBetween + Math.PI) * jumpPower);
-				}
-				else 
-				{
-					_dude.resetVelociyY();
-				}*/
 				
 				break;
 			}
@@ -127,14 +84,29 @@ class Level extends PositionableEntity
 			
 		}
 		
-		
 		// Centre camera on player.
 		var targetX:Float = (_kernel.factory.width * 0.5) - _dude.x;
 		var targetY:Float = (_kernel.factory.height * 0.5) - _dude.y;
-		setPosition(targetX, targetY);
+		var followSpeed:Float = 0.08;
+		var cameraX:Float = x + ((targetX - x) * followSpeed);
+		var cameraY:Float = y + ((targetY - y) * followSpeed);
+		setPosition(cameraX, cameraY);
+		//setPosition(targetX, targetY);
 		
-		
-		
+	}
+	
+	
+	
+	private function getWheelType(typeIndex:Int):EWheelType 
+	{
+		var wheelType:EWheelType = null;
+		switch (typeIndex) 
+		{
+			case 1 : wheelType = EWheelType.STONE;
+			case 2 : wheelType = EWheelType.WOOD;
+			case 3 : wheelType = EWheelType.WAGON;
+		}
+		return wheelType;
 	}
 	
 }

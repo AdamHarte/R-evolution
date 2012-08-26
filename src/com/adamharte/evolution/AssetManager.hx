@@ -160,7 +160,6 @@ class AssetManager extends AAssetManager
 			var frameData:BitmapData = Assets.getBitmapData( filePrefix + i + fileSuffix );
 			if (frameData == null) break;
 			
-			//var frame:Bitmap = new Bitmap(frameData);
 			frames.push( frameData );
 		}
 		
@@ -200,6 +199,10 @@ class AssetManager extends AAssetManager
 			case DUDE_JUMP 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-jump-0.png" );
 			case DUDE_SLEEP 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
 			
+			case WHEEL_STONE			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-stone.png" );
+			case WHEEL_WOOD				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-wood.png" );
+			case WHEEL_WAGON			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-wagon.png" );
+			
 		}
 		return new View( _kernel, l_sprite );
 	}
@@ -227,4 +230,8 @@ enum EAsset
 	DUDE_RUN;
 	DUDE_JUMP;
 	DUDE_SLEEP;
+	
+	WHEEL_STONE;
+	WHEEL_WOOD;
+	WHEEL_WAGON;
 }
