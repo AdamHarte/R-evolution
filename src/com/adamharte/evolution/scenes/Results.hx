@@ -24,6 +24,11 @@ class Results extends AScene
 		l_result.y = 70;
 		addEntity( l_result, true, 2 );*/
 		
+		var l_message:String = 'Thanks for playing';
+		var l_result:Text = new Text( _kernel, _kernel.factory.width, 50, l_message, _kernel.factory.createTextStyle( ETextStyle.SUBHEAD ) );
+		l_result.y = 70;
+		addEntity( l_result, true, 2 );
+		
 	}
 	
 }

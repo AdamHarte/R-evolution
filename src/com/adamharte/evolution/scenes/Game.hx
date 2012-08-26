@@ -61,6 +61,13 @@ class Game extends Scene
 			addEntity(levelLabel, true, 3);
 		}
 		
+		//var levelLabelCorner:LevelLabel = new LevelLabel(_kernel, false);
+		//addEntity(levelLabelCorner, true, 3);
+		var message:String = 'Level: ' + Std.string(_session.currentLevel + 1);
+		var label:Text = new Text( _kernel, 120, 50, message, _kernel.factory.createTextStyle( ETextStyle.SUBHEAD ) );
+		label.y = _kernel.factory.height - 30;
+		addEntity( label, true, 4 );
+		
 		_kernel.audio.start( "StartLevel", EAudioChannel.EFFECTS, 1, 0, .6 );
 	}
 	
@@ -70,6 +77,8 @@ class Game extends Scene
 		
 		if (_session.isWin) 
 		{
+			_kernel.audio.start( "Win", EAudioChannel.EFFECTS, 1, 0, .2 );
+			
 			_session.currentLevel++;
 			_session.attemptNumber = 0;
 			if (_session.currentLevel >= _session.totalLevels) 

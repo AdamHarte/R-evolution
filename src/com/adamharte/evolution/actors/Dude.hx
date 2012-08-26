@@ -156,7 +156,7 @@ class Dude extends PositionableEntity
 			
 			_runSpeed *= 1 - ( _friction * ( 1 - l_adjustedDelta ) );
 			
-			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ))
+			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ) )
 			{
 				var jumpPower:Float = 9;
 				var moveOffset:Float = _runSpeed * 15; // Takes the run speed into account for the jump angle.

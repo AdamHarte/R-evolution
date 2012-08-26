@@ -16,12 +16,14 @@ class LevelLabel extends PositionableEntity
 {
 	private var _assetManager:AssetManager;
 	private var _session:Session;
+	private var _autoFade:Bool;
 	
 	
-	public function new(p_kernel:IKernel) 
+	public function new(p_kernel:IKernel, ?p_autoFade:Bool=true) 
 	{
 		_assetManager = cast p_kernel.assets;
 		_session = cast p_kernel.session;
+		_autoFade = p_autoFade;
 		
 		super(p_kernel);
 	}
@@ -32,7 +34,7 @@ class LevelLabel extends PositionableEntity
 		
 		
 		var message:String = 'Level: ' + Std.string(_session.currentLevel + 1);
-		var label:Text = new Text( _kernel, _kernel.factory.width, 50, message, _kernel.factory.createTextStyle( ETextStyle.SUBHEAD ) );
+		var label:Text = new Text( _kernel, _kernel.factory.width, 50, message, _kernel.factory.createTextStyle( ETextStyle.HEADLINE ) );
 		label.y = 70;
 		addEntity( label, true, 2 );
 	}
@@ -42,20 +44,20 @@ class LevelLabel extends PositionableEntity
 		super._updater(p_deltaTime);
 		var l_adjustedDelta:Float = p_deltaTime * .001;
 		
-		if (_age < 2500) 
+		if (_autoFade) 
 		{
-			if (_age > 2000) 
+			if (_age < 2500) 
 			{
-				cast(view, AView).context.alpha = 1.0 - ((_age - 2000) / 500);
+				if (_age > 2000) 
+				{
+					cast(view, AView).context.alpha = 1.0 - ((_age - 2000) / 500);
+				}
+			}
+			else 
+			{
+				cast(view, AView).context.alpha = 0;
 			}
 		}
-		else 
-		{
-			cast(view, AView).context.alpha = 0;
-		}
-		
-		
-		
 	}
 	
 }

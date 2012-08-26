@@ -38,7 +38,7 @@ class Intro extends Scene
 		super._init();
 		_kernel.session = _kernel.factory.createSession( "Basic" );
 		
-		_kernel.audio.isMute = true;
+		//_kernel.audio.isMute = true;
 		
 		view.addChild( _assetManager.background, 0 );
 		
