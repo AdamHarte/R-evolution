@@ -133,6 +133,40 @@ class AssetManager extends AAssetManager
 		return resultLevel;
 	}
 	
+	public function getAnimationFrames(p_type:EAsset):Array<BitmapData> 
+	{
+		var frames:Array<BitmapData> = new Array<BitmapData>();
+		
+		var filePrefix:String = '';
+		var fileSuffix:String = '.png';
+		var frameCount:Int = 1;
+		
+		switch( p_type )
+		{
+			case DUDE_STAND : 
+				filePrefix = "assets/character/dude-stand-";
+			case DUDE_RUN 	: 
+				filePrefix = "assets/character/dude-run-";
+				frameCount = 4;
+			case DUDE_JUMP 	: 
+				filePrefix = "assets/character/dude-jump-";
+			case DUDE_SLEEP : 
+				filePrefix = "assets/character/dude-stand-";
+			default : null;
+		}
+		
+		for (i in 0...frameCount) 
+		{
+			var frameData:BitmapData = Assets.getBitmapData( filePrefix + i + fileSuffix );
+			if (frameData == null) break;
+			
+			//var frame:Bitmap = new Bitmap(frameData);
+			frames.push( frameData );
+		}
+		
+		return frames;
+	}
+	
 	
 	
 	private function _createView( p_type:EAsset ):IView
@@ -157,13 +191,13 @@ class AssetManager extends AAssetManager
 			case OVERLAY_PAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseOver.png" );
 			case OVERLAY_UNPAUSE_UP 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseUp.png" );
 			case OVERLAY_UNPAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseOver.png" );
-			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/Background.png" );
+			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background.png" );
 			
 			case CLOUDS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/clouds.png" );
 			
 			case DUDE_STAND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
-			case DUDE_RUN 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
-			case DUDE_JUMP 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
+			case DUDE_RUN 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-run-0.png" );
+			case DUDE_JUMP 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-jump-0.png" );
 			case DUDE_SLEEP 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
 			
 		}

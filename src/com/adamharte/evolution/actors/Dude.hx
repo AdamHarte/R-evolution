@@ -19,7 +19,7 @@ class Dude extends PositionableEntity
 	
 	private var _assetManager:AssetManager;
 	private var _currentWheel:Wheel;
-	//private var _targetRotation:Float;
+	private var _targetRotation:Float;
 	private var _gravity:Float;
 	private var _runSpeed:Float;
 	private var _runSpeedMax:Float;
@@ -48,27 +48,27 @@ class Dude extends PositionableEntity
 		super._init();
 		
 		var dudeView:AView = cast _assetManager.getViewAsset(EAsset.DUDE_STAND);
-		_dudeStand = new PositionableEntity(_kernel, dudeView);
+		_dudeStand = new AnimatedEntity(_kernel, dudeView, _assetManager.getAnimationFrames(EAsset.DUDE_STAND));
 		_dudeStand.centreGraphics();
-		_dudeRun = new PositionableEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_RUN));
+		_dudeRun = new AnimatedEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_RUN), _assetManager.getAnimationFrames(EAsset.DUDE_RUN));
 		_dudeRun.centreGraphics();
-		_dudeJump = new PositionableEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_JUMP));
+		_dudeJump = new AnimatedEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_JUMP), _assetManager.getAnimationFrames(EAsset.DUDE_JUMP));
 		_dudeJump.centreGraphics();
-		_dudeSleep = new PositionableEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_SLEEP));
+		_dudeSleep = new AnimatedEntity(_kernel, _assetManager.getViewAsset(EAsset.DUDE_SLEEP), _assetManager.getAnimationFrames(EAsset.DUDE_SLEEP));
 		_dudeSleep.centreGraphics();
 		
 		width = dudeView.context.width;
 		height = dudeView.context.height;
 		//dudeView.context.x = width * -0.5;
 		//dudeView.context.y = height * -0.5;
-		radius = height * 0.5;
+		radius = 18; // height * 0.5;
 		
 		addEntity(_dudeStand, EAgenda.SUB_TYPE(_EDudeState.STAND), true, 1);
 		addEntity(_dudeRun, EAgenda.SUB_TYPE(_EDudeState.RUN), true, 1);
 		addEntity(_dudeJump , EAgenda.SUB_TYPE(_EDudeState.JUMP), true, 1);
 		addEntity(_dudeSleep , EAgenda.SUB_TYPE(_EDudeState.SLEEP), true, 1);
 		
-		//_targetRotation = 0;
+		_targetRotation = 0;
 		_runAcceleration = Math.PI * 0.02;
 		_runSpeed = 0;
 		_runSpeedMax = Math.PI * 1.5;
@@ -91,8 +91,8 @@ class Dude extends PositionableEntity
 	
 	public function setRotation(angle:Float):Void 
 	{
-		cast(view, AView).context.rotation = angle;
-		//_targetRotation = angle;
+		//cast(view, AView).context.rotation = angle;
+		_targetRotation = angle;
 	}
 	
 	public function setVelocity(velocityX:Float, velocityY:Float):Void 
@@ -114,9 +114,7 @@ class Dude extends PositionableEntity
 		var l_adjustedDelta:Float = p_deltaTime * .001;
 		
 		
-		//var context:Context = cast(view, AView).context;
-		//var rotateDelta:Float = (_targetRotation - context.rotation) * 0.6;
-		//context.rotation += rotateDelta;
+		var rotationSpeed:Float = 0.6;
 		
 		
 		if (_currentWheel != null) 
@@ -128,7 +126,8 @@ class Dude extends PositionableEntity
 			
 			var angleBetween:Float = Math.atan2(dy, dx);
 			
-			cast(view, AView).context.rotation = angleBetween * (180 / Math.PI) - 90;
+			//cast(view, AView).context.rotation = angleBetween * (180 / Math.PI) - 90;
+			setRotation(angleBetween * (180 / Math.PI) - 90);
 			
 			//var moveDelta:Float = 0;
 			var distOffset:Float = 0;
@@ -139,11 +138,18 @@ class Dude extends PositionableEntity
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.RIGHT ))
 			{
 				_runSpeed += _runAcceleration * l_adjustedDelta;
+				setAgenda(EAgenda.SUB_TYPE(_EDudeState.RUN));
+				cast(view, AView).context.scaleX = 1;
 			}
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.LEFT ))
 			{
 				_runSpeed -= _runAcceleration * l_adjustedDelta;
+				setAgenda(EAgenda.SUB_TYPE(_EDudeState.RUN));
+				cast(view, AView).context.scaleX = -1;
 			}
+			
+			_runSpeed *= 1 - ( _friction * ( 1 - l_adjustedDelta ) );
+			
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ))
 			{
 				var jumpPower:Float = 9;
@@ -151,13 +157,18 @@ class Dude extends PositionableEntity
 				_dx = Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower;
 				_dy = Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower;
 				distOffset = 6;
+				
+				setAgenda(EAgenda.SUB_TYPE(_EDudeState.JUMP));
 			}
 			else 
 			{
 				resetVelociyY();
+				
+				if (Math.abs(_runSpeed) < 0.005) 
+				{
+					setAgenda(EAgenda.SUB_TYPE(_EDudeState.STAND));
+				}
 			}
-			
-			_runSpeed *= 1 - ( _friction * ( 1 - l_adjustedDelta ) );
 			
 			var maxDistSqrt:Float = Math.sqrt(maxDist) + distOffset;
 			var wheelRotationSpeed:Float = _currentWheel.rotationSpeed * l_adjustedDelta;
@@ -178,9 +189,20 @@ class Dude extends PositionableEntity
 			// apply inertia
 			x += _dx;
 			y += _dy;
+			
+			_targetRotation = 0;
+			rotationSpeed = 0.05;
 		}
 		
 		
+		
+		
+		// Ease to target rotation.
+		var context:Context = cast(view, AView).context;
+		var shortestAngle:Float = _targetRotation - context.rotation;
+		if (shortestAngle > 180) shortestAngle -= 360;
+		if (shortestAngle < -180) shortestAngle += 360;
+		context.rotation += (_targetRotation - context.rotation) * rotationSpeed;
 		
 		
 		

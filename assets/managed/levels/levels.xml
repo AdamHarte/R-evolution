@@ -3,6 +3,7 @@
 <levels>
 	<level id="0">
 		<player start_x="100" start_y="200" />
+		<bg colours="0x023B47,0x295E52,0xF2E085,0xFCAB55,0xEE7F38" />
 		<bodies>
 			<!--<body type="{1:wheel}" x="{x}" y="{y}" size="{radius}" speed="{pi-radians per second}" />-->
 			<body type="1" x="100" y="500" size="250" speed="0.5" />
