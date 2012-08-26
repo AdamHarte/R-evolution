@@ -13,6 +13,8 @@ import com.adamharte.evolution.actors.Wheel;
 
 class Level extends PositionableEntity
 {
+	public var isOutOfBounds(default, null):Bool;
+	
 	private var _assetsManager:AssetManager;
 	private var _levelXml:Xml;
 	private var _wheels:Array<Wheel>;
@@ -29,6 +31,8 @@ class Level extends PositionableEntity
 	override private function _init():Void 
 	{
 		super._init();
+		
+		isOutOfBounds = false;
 		
 		// Generate level from level xml data.
 		_wheels = new Array<Wheel>();
@@ -92,6 +96,11 @@ class Level extends PositionableEntity
 		var cameraY:Float = y + ((targetY - y) * followSpeed);
 		setPosition(cameraX, cameraY);
 		//setPosition(targetX, targetY);
+		
+		if (_dude.y > 1000) 
+		{
+			isOutOfBounds = true;
+		}
 		
 	}
 	

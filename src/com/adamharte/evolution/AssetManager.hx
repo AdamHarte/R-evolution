@@ -71,9 +71,9 @@ class AssetManager extends AAssetManager
 		}		
 		if ( ( p_packageId == _kernel.getConfig( "settings.assets.packages.audio" ) ) || ( p_packageId == "assets.audio" ) )
 		{
-			var l_extension:String = ".mp3";
+			var l_extension:String = ".wav";
 			#if cpp
-			l_extension = ".ogg"; // doesn't work on Macs?
+			l_extension = ".wav";// ".ogg"; // doesn't work on Macs?
 			#elseif js
 			l_extension = untyped jeash.media.Sound.jeashCanPlayType( "ogg" ) ? ".ogg" : ".mp3";
 			#end
@@ -190,7 +190,10 @@ class AssetManager extends AAssetManager
 			case OVERLAY_PAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseOver.png" );
 			case OVERLAY_UNPAUSE_UP 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseUp.png" );
 			case OVERLAY_UNPAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseOver.png" );
-			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background.png" );
+			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-01.png" );
+			case TITLE 					: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/title.png" );
+			case CLICK_TO_PLAY_TEXT 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/click-to-play.png" );
+			case CONTROLS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/controls.png" );
 			
 			case CLOUDS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/clouds.png" );
 			
@@ -223,6 +226,9 @@ enum EAsset
 	OVERLAY_UNPAUSE_UP;
 	OVERLAY_UNPAUSE_OVER;
 	BACKGROUND;
+	TITLE;
+	CLICK_TO_PLAY_TEXT;
+	CONTROLS;
 	
 	CLOUDS;
 	

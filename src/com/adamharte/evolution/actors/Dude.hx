@@ -5,6 +5,7 @@ import awe6.interfaces.IKernel;
 import awe6.interfaces.IView;
 import awe6.interfaces.EAgenda;
 import awe6.interfaces.EJoypadButton;
+import awe6.interfaces.EAudioChannel;
 import com.adamharte.evolution.AssetManager;
 
 /**
@@ -24,6 +25,7 @@ class Dude extends PositionableEntity
 	private var _runSpeed:Float;
 	private var _runSpeedMax:Float;
 	private var _runAcceleration:Float;
+	private var _runAccelerationBase:Float;
 	private var _dx:Float;
 	private var _dy:Float;
 	private var _speed:Float;
@@ -69,7 +71,8 @@ class Dude extends PositionableEntity
 		addEntity(_dudeSleep , EAgenda.SUB_TYPE(_EDudeState.SLEEP), true, 1);
 		
 		_targetRotation = 0;
-		_runAcceleration = Math.PI * 0.02;
+		_runAccelerationBase = Math.PI * 0.03;
+		_runAcceleration = _runAccelerationBase;
 		_runSpeed = 0;
 		_runSpeedMax = Math.PI * 1.5;
 		_gravity = 0.22;
@@ -133,6 +136,9 @@ class Dude extends PositionableEntity
 			var distOffset:Float = 0;
 			
 			//TODO: Run acceleration is an angle, but it should be based on the current wheels radius.
+			var ratio:Float = 100 / _currentWheel.radius;
+			_runAcceleration = _runAccelerationBase * ratio;
+			
 			
 			// listen to virtual joypad
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.RIGHT ))
@@ -153,10 +159,13 @@ class Dude extends PositionableEntity
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ))
 			{
 				var jumpPower:Float = 9;
-				var moveOffset:Float = _runSpeed * 20; // Takes the run speed into account for the jump angle.
+				var moveOffset:Float = _runSpeed * 15; // Takes the run speed into account for the jump angle.
 				_dx = Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower;
 				_dy = Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower;
 				distOffset = 6;
+				_runSpeed *= 0.2;
+				
+				_kernel.audio.start( "Jump", EAudioChannel.EFFECTS, 1, 0, .8 );
 				
 				setAgenda(EAgenda.SUB_TYPE(_EDudeState.JUMP));
 			}
@@ -164,11 +173,26 @@ class Dude extends PositionableEntity
 			{
 				resetVelociyY();
 				
+				/*if (y > _currentWheel.y + (_currentWheel.radius * 0.3)) 
+				{
+					distOffset = 20;
+				}*/
+				
 				if (Math.abs(_runSpeed) < 0.005) 
 				{
 					setAgenda(EAgenda.SUB_TYPE(_EDudeState.STAND));
 				}
+				else 
+				{
+					_kernel.audio.start( "Step", EAudioChannel.EFFECTS, 1, 0, .1, 0, true );
+				}
 			}
+			
+			/*var yOffset:Float = 1;
+			if (_currentWheel.y + op > _currentWheel.y) 
+			{
+				yOffset = 10;
+			}*/
 			
 			var maxDistSqrt:Float = Math.sqrt(maxDist) + distOffset;
 			var wheelRotationSpeed:Float = _currentWheel.rotationSpeed * l_adjustedDelta;
@@ -177,6 +201,10 @@ class Dude extends PositionableEntity
 			var ad:Float = Math.cos(angle) * maxDistSqrt;
 			setPosition(_currentWheel.x + ad, _currentWheel.y + op + 1);
 			
+			/*if (y > _currentWheel.y + (_currentWheel.radius * 0.3)) 
+			{
+				_currentWheel = null;
+			}*/
 		}
 		else 
 		{

@@ -1,4 +1,5 @@
 package com.adamharte.evolution.scenes;
+import awe6.core.drivers.AView;
 import awe6.core.Scene;
 import awe6.extras.gui.Text;
 import awe6.interfaces.EAudioChannel;
@@ -10,6 +11,7 @@ import com.adamharte.evolution.actors.Dude;
 import com.adamharte.evolution.actors.Level;
 import com.adamharte.evolution.AssetManager;
 import com.adamharte.evolution.Session;
+import nme.ui.Mouse;
 
 /**
  * ...
@@ -18,12 +20,10 @@ import com.adamharte.evolution.Session;
 
 class Game extends Scene
 {
-	public static inline var TIME_LIMIT = 30; // Seconds.
-	
 	private var _session:Session;
 	private var _assetManager:AssetManager;
-	private var _timer:Text;
-	private var _score:Int;
+	//private var _score:Int;
+	private var level:Level;
 	
 	
 	public function new( p_kernel:IKernel, p_type:EScene ) 
@@ -39,47 +39,30 @@ class Game extends Scene
 		
 		_session.isWin = false;
 		
+		//Mouse.hide();
+		
 		view.addChild( _assetManager.background, 0 );
 		
-		_timer = new Text( _kernel, _kernel.factory.width, 50, Std.string( _tools.convertAgeToFormattedTime( 0 ) ), _kernel.factory.createTextStyle( ETextStyle.SUBHEAD ) );
-		_timer.y = 70;
-		addEntity( _timer, true, 1000 );
-		
-		_kernel.audio.stop( "MusicMenu", EAudioChannel.MUSIC );
-		_kernel.audio.start( "MusicGame", EAudioChannel.MUSIC, -1, 0, .5, 0, true );
-		
-		/*for ( i in 0...10 )
-		{
-			addEntity( new Sphere( _kernel ), true, i + 10 );
-		}*/
+		//_kernel.audio.stop( "MusicMenu", EAudioChannel.MUSIC );
+		//_kernel.audio.start( "MusicGame", EAudioChannel.MUSIC, -1, 0, .5, 0, true );
 		
 		var clouds:Clouds = new Clouds(_kernel);
 		addEntity(clouds, true, 1);
 		
-		var level:Level = new Level(_kernel, _assetManager.getLevelData(_session.currentLevel));
+		level = new Level(_kernel, _assetManager.getLevelData(_session.currentLevel));
 		addEntity(level, true, 2);
 		
-		//var dude:Dude = new Dude(_kernel);
-		//addEntity(dude, true, 3);
-		
+		_kernel.audio.start( "StartLevel", EAudioChannel.EFFECTS, 1, 0, .6 );
 	}
 	
 	override private function _updater( ?p_deltaTime:Int = 0 ):Void 
 	{
 		super._updater( p_deltaTime );
 		
-		_score = Std.int( _tools.limit( ( 1000 * TIME_LIMIT ) - _age, 0, _tools.BIG_NUMBER ) );
-		if ( _score == 0 )
+		if (level.isOutOfBounds) 
 		{
 			_gameOver();
 		}
-		_timer.text = _tools.convertAgeToFormattedTime( _age );
-		
-		/*var l_spheres:Array<Sphere> = getEntitiesByClass( Sphere );
-		if ( ( l_spheres == null ) || ( l_spheres.length == 0 ) )
-		{
-			_gameOver();
-		}*/
 	}
 	
 	override private function _disposer():Void 
@@ -90,12 +73,16 @@ class Game extends Scene
 	
 	private function _gameOver():Void
 	{
-		if ( _score > _session.highScore )
+		/*if ( _score > _session.highScore )
 		{
 			_session.isWin = true;
 			_session.highScore = _score;
-		}
-		_kernel.scenes.next();
+		}*/
+		
+		_kernel.audio.start( "Die", EAudioChannel.EFFECTS, 1, 0, .8 );
+		
+		//_kernel.scenes.next();
+		_kernel.scenes.restart();
 	}
 	
 }

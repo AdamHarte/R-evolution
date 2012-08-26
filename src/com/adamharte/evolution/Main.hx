@@ -6,7 +6,9 @@ import haxe.Resource;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.Lib;
+#if flash
 import org.flashdevelop.utils.FlashConnect;
+#end
 
 /**
  * ...
