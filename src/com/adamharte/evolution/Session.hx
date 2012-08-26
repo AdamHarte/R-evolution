@@ -12,6 +12,8 @@ class Session extends ASession
 	public var highScore:Int;
 	public var isWin:Bool; // temporary
 	public var currentLevel:Int;
+	public var totalLevels:Int;
+	public var attemptNumber:Int;
 	
 	override private function _init()
 	{
@@ -25,6 +27,7 @@ class Session extends ASession
 		name = _data.name;
 		highScore = _data.highScore;
 		//currentLevel = _data.currentLevel;
+		
 	}
 	
 	override private function _setter():Void
@@ -41,6 +44,7 @@ class Session extends ASession
 		name = "???";
 		highScore = 0;
 		currentLevel = 0;
+		attemptNumber = 0;
 	}
 	
 	override public function getPercentageComplete():Float

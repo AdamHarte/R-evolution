@@ -133,6 +133,12 @@ class AssetManager extends AAssetManager
 		return resultLevel;
 	}
 	
+	public function getLevelCount():Int 
+	{
+		var levelData:Fast = new Fast(levelData.firstElement()).node.levels;
+		return Lambda.count(levelData.nodes.level);
+	}
+	
 	public function getAnimationFrames(p_type:EAsset):Array<BitmapData> 
 	{
 		var frames:Array<BitmapData> = new Array<BitmapData>();
@@ -194,6 +200,7 @@ class AssetManager extends AAssetManager
 			case TITLE 					: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/title.png" );
 			case CLICK_TO_PLAY_TEXT 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/click-to-play.png" );
 			case CONTROLS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/controls.png" );
+			case CREDITS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/credits.png" );
 			
 			case CLOUDS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/clouds.png" );
 			
@@ -202,6 +209,7 @@ class AssetManager extends AAssetManager
 			case DUDE_JUMP 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-jump-0.png" );
 			case DUDE_SLEEP 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/character/dude-stand-0.png" );
 			
+			case WHEEL_GOLD				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-gold.png" );
 			case WHEEL_STONE			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-stone.png" );
 			case WHEEL_WOOD				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-wood.png" );
 			case WHEEL_WAGON			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/levels/wheel-wagon.png" );
@@ -229,6 +237,7 @@ enum EAsset
 	TITLE;
 	CLICK_TO_PLAY_TEXT;
 	CONTROLS;
+	CREDITS;
 	
 	CLOUDS;
 	
@@ -237,6 +246,7 @@ enum EAsset
 	DUDE_JUMP;
 	DUDE_SLEEP;
 	
+	WHEEL_GOLD;
 	WHEEL_STONE;
 	WHEEL_WOOD;
 	WHEEL_WAGON;

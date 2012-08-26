@@ -10,6 +10,7 @@ import com.adamharte.evolution.actors.Clouds;
 import com.adamharte.evolution.actors.Dude;
 import com.adamharte.evolution.actors.Level;
 import com.adamharte.evolution.AssetManager;
+import com.adamharte.evolution.gui.LevelLabel;
 import com.adamharte.evolution.Session;
 import nme.ui.Mouse;
 
@@ -38,6 +39,7 @@ class Game extends Scene
 		super._init();
 		
 		_session.isWin = false;
+		_session.totalLevels = _assetManager.getLevelCount();
 		
 		//Mouse.hide();
 		
@@ -52,6 +54,13 @@ class Game extends Scene
 		level = new Level(_kernel, _assetManager.getLevelData(_session.currentLevel));
 		addEntity(level, true, 2);
 		
+		if (_session.attemptNumber == 0) 
+		{
+			// Show level name.
+			var levelLabel:LevelLabel = new LevelLabel(_kernel);
+			addEntity(levelLabel, true, 3);
+		}
+		
 		_kernel.audio.start( "StartLevel", EAudioChannel.EFFECTS, 1, 0, .6 );
 	}
 	
@@ -59,7 +68,21 @@ class Game extends Scene
 	{
 		super._updater( p_deltaTime );
 		
-		if (level.isOutOfBounds) 
+		if (_session.isWin) 
+		{
+			_session.currentLevel++;
+			_session.attemptNumber = 0;
+			if (_session.currentLevel >= _session.totalLevels) 
+			{
+				//finished game.
+				_kernel.scenes.next();
+			}
+			else 
+			{
+				_kernel.scenes.restart();
+			}
+		}
+		else if (level.isOutOfBounds) 
 		{
 			_gameOver();
 		}
@@ -78,6 +101,8 @@ class Game extends Scene
 			_session.isWin = true;
 			_session.highScore = _score;
 		}*/
+		
+		_session.attemptNumber++;
 		
 		_kernel.audio.start( "Die", EAudioChannel.EFFECTS, 1, 0, .8 );
 		

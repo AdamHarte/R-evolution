@@ -50,6 +50,10 @@ class Intro extends Scene
 		controls.setPosition( ( _kernel.factory.width - controls.context.width ) / 2, ( (_kernel.factory.height * 1.1) - controls.context.height ) / 2 );
 		view.addChild( controls, 1 );
 		
+		var credits:AView = cast _assetManager.getViewAsset(EAsset.CREDITS);
+		credits.setPosition( _kernel.factory.width * 0.02, (_kernel.factory.height * 0.98) - credits.context.height );
+		view.addChild( credits, 1 );
+		
 		clickToBeginText = cast _assetManager.getViewAsset(EAsset.CLICK_TO_PLAY_TEXT);
 		clickToBeginText.setPosition( ( _kernel.factory.width - clickToBeginText.context.width ) / 2, ( (_kernel.factory.height * 1.6) - clickToBeginText.context.height ) / 2 );
 		view.addChild( clickToBeginText, 2 );

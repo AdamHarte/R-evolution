@@ -17,11 +17,11 @@ class Wheel extends PositionableEntity
 	public var radius(default, null):Float;
 	public var rotationSpeed(default, null):Float;
 	public var isTouching:Bool;
+	public var wheelType(default, null):EWheelType;
 	
 	private var _assetManager:AssetManager;
 	private var _sprite:Sprite;
 	//private var _touchingSprite:Sprite;
-	private var _type:EWheelType;
 	
 	
 	
@@ -31,7 +31,7 @@ class Wheel extends PositionableEntity
 		isTouching = false;
 		radius = p_radius;
 		rotationSpeed = p_rotationSpeed;
-		_type = p_type;
+		wheelType = p_type;
 		
 		super(p_kernel);
 	}
@@ -59,8 +59,9 @@ class Wheel extends PositionableEntity
 		var wheelView:View = new View(_kernel, _sprite);*/
 		
 		var wheelView:AView = null;
-		switch (_type) 
+		switch (wheelType) 
 		{
+			case EWheelType.GOLD  : wheelView = cast _assetManager.getViewAsset(EAsset.WHEEL_GOLD);
 			case EWheelType.STONE : wheelView = cast _assetManager.getViewAsset(EAsset.WHEEL_STONE);
 			case EWheelType.WOOD  : wheelView = cast _assetManager.getViewAsset(EAsset.WHEEL_WOOD);
 			case EWheelType.WAGON : wheelView = cast _assetManager.getViewAsset(EAsset.WHEEL_WAGON);
@@ -102,6 +103,7 @@ private enum _EWheelState
 
 enum EWheelType
 {
+	GOLD;
 	STONE;
 	WOOD;
 	WAGON;

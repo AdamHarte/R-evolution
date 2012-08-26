@@ -3,6 +3,7 @@ import awe6.core.View;
 import awe6.interfaces.IKernel;
 import awe6.interfaces.EJoypadButton;
 import com.adamharte.evolution.AssetManager;
+import com.adamharte.evolution.Session;
 import haxe.xml.Fast;
 import com.adamharte.evolution.actors.Wheel;
 
@@ -15,6 +16,7 @@ class Level extends PositionableEntity
 {
 	public var isOutOfBounds(default, null):Bool;
 	
+	private var _session:Session;
 	private var _assetsManager:AssetManager;
 	private var _levelXml:Xml;
 	private var _wheels:Array<Wheel>;
@@ -23,6 +25,7 @@ class Level extends PositionableEntity
 	public function new(p_kernel:IKernel, p_levelXml:Xml) 
 	{
 		_assetsManager = cast p_kernel.assets;
+		_session = cast p_kernel.session;
 		_levelXml = p_levelXml;
 		
 		super(p_kernel, new View(p_kernel));
@@ -78,6 +81,12 @@ class Level extends PositionableEntity
 				wheel.isTouching = true;
 				_dude.attachToWheel(wheel);
 				
+				//if (wheel.wheelType) 
+				if (Type.enumEq(wheel.wheelType, EWheelType.GOLD)) 
+				{
+					_session.isWin = true;
+				}
+				
 				break;
 			}
 			else 
@@ -111,6 +120,7 @@ class Level extends PositionableEntity
 		var wheelType:EWheelType = null;
 		switch (typeIndex) 
 		{
+			case 0 : wheelType = EWheelType.GOLD;
 			case 1 : wheelType = EWheelType.STONE;
 			case 2 : wheelType = EWheelType.WOOD;
 			case 3 : wheelType = EWheelType.WAGON;
