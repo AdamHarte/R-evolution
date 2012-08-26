@@ -33,7 +33,7 @@ class AScene extends Scene
 	override private function _init():Void 
 	{
 		super._init();
-		view.addChild( _assetManager.background, 0 );
+		view.addChild( _assetManager.getViewAsset(EAsset.MENU_BACKGROUND), 0 );
 		
 		var l_sceneType:String = _tools.toCamelCase( Std.string( type ) );
 		_title = Std.string( _kernel.getConfig( "gui.scenes." + l_sceneType + ".title" ) );

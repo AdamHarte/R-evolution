@@ -40,7 +40,7 @@ class Intro extends Scene
 		
 		//_kernel.audio.isMute = true;
 		
-		view.addChild( _assetManager.background, 0 );
+		view.addChild( _assetManager.getViewAsset(EAsset.MENU_BACKGROUND), 0 );
 		
 		var title:AView = cast _assetManager.getViewAsset(EAsset.TITLE);
 		title.setPosition( ( _kernel.factory.width - title.context.width ) / 2, ( (_kernel.factory.height/ 2) - title.context.height ) / 2 );

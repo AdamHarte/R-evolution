@@ -196,11 +196,17 @@ class AssetManager extends AAssetManager
 			case OVERLAY_PAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/PauseOver.png" );
 			case OVERLAY_UNPAUSE_UP 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseUp.png" );
 			case OVERLAY_UNPAUSE_OVER 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/overlay/buttons/UnpauseOver.png" );
-			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-01.png" );
 			case TITLE 					: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/title.png" );
 			case CLICK_TO_PLAY_TEXT 	: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/click-to-play.png" );
 			case CONTROLS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/controls.png" );
 			case CREDITS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/credits.png" );
+			
+			case MENU_BACKGROUND 		: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/menu-background.png" );
+			case BACKGROUND 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background.png" );
+			case BACKGROUND_1 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-01.png" );
+			case BACKGROUND_2 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-02.png" );
+			case BACKGROUND_3 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-03.png" );
+			case BACKGROUND_4 			: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/background-04.png" );
 			
 			case CLOUDS 				: l_bitmap.bitmapData = Assets.getBitmapData( "assets/scenes/clouds.png" );
 			
@@ -233,11 +239,17 @@ enum EAsset
 	OVERLAY_PAUSE_OVER;
 	OVERLAY_UNPAUSE_UP;
 	OVERLAY_UNPAUSE_OVER;
-	BACKGROUND;
 	TITLE;
 	CLICK_TO_PLAY_TEXT;
 	CONTROLS;
 	CREDITS;
+	
+	MENU_BACKGROUND;
+	BACKGROUND;
+	BACKGROUND_1;
+	BACKGROUND_2;
+	BACKGROUND_3;
+	BACKGROUND_4;
 	
 	CLOUDS;
 	

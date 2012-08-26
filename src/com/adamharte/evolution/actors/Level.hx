@@ -37,6 +37,8 @@ class Level extends PositionableEntity
 		
 		isOutOfBounds = false;
 		
+		var wheelBiggestX:Float = 0;
+		
 		// Generate level from level xml data.
 		_wheels = new Array<Wheel>();
 		var levelData:Fast = new Fast(_levelXml);
@@ -52,7 +54,11 @@ class Level extends PositionableEntity
 			wheel.setPosition(wheelX, wheelY);
 			_wheels.push(wheel);
 			addEntity(wheel, true, 1);
+			
+			if (wheelX > wheelBiggestX) wheelBiggestX = wheelX;
 		}
+		
+		width = wheelBiggestX;
 		
 		var player = levelData.node.player;
 		var playerStartX:Float = Std.parseFloat(player.att.start_x);
@@ -102,11 +108,11 @@ class Level extends PositionableEntity
 		var targetY:Float = (_kernel.factory.height * 0.5) - _dude.y;
 		var followSpeed:Float = 0.08;
 		var cameraX:Float = x + ((targetX - x) * followSpeed);
+		if (cameraX > 100) cameraX = 100; 
 		var cameraY:Float = y + ((targetY - y) * followSpeed);
 		setPosition(cameraX, cameraY);
-		//setPosition(targetX, targetY);
 		
-		if (_dude.y > 1000) 
+		if (_dude.y > 1000 || _dude.x < -100) 
 		{
 			isOutOfBounds = true;
 		}

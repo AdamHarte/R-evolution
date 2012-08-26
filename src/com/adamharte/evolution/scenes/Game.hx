@@ -9,6 +9,7 @@ import awe6.interfaces.IKernel;
 import com.adamharte.evolution.actors.Clouds;
 import com.adamharte.evolution.actors.Dude;
 import com.adamharte.evolution.actors.Level;
+import com.adamharte.evolution.actors.ParallaxBackground;
 import com.adamharte.evolution.AssetManager;
 import com.adamharte.evolution.gui.LevelLabel;
 import com.adamharte.evolution.Session;
@@ -25,6 +26,10 @@ class Game extends Scene
 	private var _assetManager:AssetManager;
 	//private var _score:Int;
 	private var level:Level;
+	private var bg1:ParallaxBackground;
+	private var bg2:ParallaxBackground;
+	private var bg3:ParallaxBackground;
+	private var bg4:ParallaxBackground;
 	
 	
 	public function new( p_kernel:IKernel, p_type:EScene ) 
@@ -48,8 +53,19 @@ class Game extends Scene
 		//_kernel.audio.stop( "MusicMenu", EAudioChannel.MUSIC );
 		//_kernel.audio.start( "MusicGame", EAudioChannel.MUSIC, -1, 0, .5, 0, true );
 		
-		var clouds:Clouds = new Clouds(_kernel);
-		addEntity(clouds, true, 1);
+		
+		bg4 = new ParallaxBackground(_kernel, _assetManager.getViewAsset(EAsset.BACKGROUND_4), 0.3);
+		addEntity(bg4, true, 1);
+		bg3 = new ParallaxBackground(_kernel, _assetManager.getViewAsset(EAsset.BACKGROUND_3), 0.35);
+		addEntity(bg3, true, 1);
+		bg2 = new ParallaxBackground(_kernel, _assetManager.getViewAsset(EAsset.BACKGROUND_2), 0.4);
+		addEntity(bg2, true, 1);
+		bg1 = new ParallaxBackground(_kernel, _assetManager.getViewAsset(EAsset.BACKGROUND_1), 0.6);
+		addEntity(bg1, true, 1);
+		
+		
+		//var clouds:Clouds = new Clouds(_kernel);
+		//addEntity(clouds, true, 1);
 		
 		level = new Level(_kernel, _assetManager.getLevelData(_session.currentLevel));
 		addEntity(level, true, 2);
@@ -74,6 +90,11 @@ class Game extends Scene
 	override private function _updater( ?p_deltaTime:Int = 0 ):Void 
 	{
 		super._updater( p_deltaTime );
+		
+		bg1.updatePosition(level.x - 300, level.y);
+		bg2.updatePosition(level.x - 300, level.y);
+		bg3.updatePosition(level.x - 300, level.y);
+		bg4.updatePosition(level.x - 300, level.y);
 		
 		if (_session.isWin) 
 		{
