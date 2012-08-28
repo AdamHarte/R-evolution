@@ -15,6 +15,7 @@ import awe6.interfaces.ITextStyle;
 import com.adamharte.evolution.scenes.Game;
 import com.adamharte.evolution.scenes.Intro;
 import com.adamharte.evolution.scenes.Results;
+import kong.KongregateApi;
 
 /**
  * ...
@@ -23,6 +24,8 @@ import com.adamharte.evolution.scenes.Results;
 
 class Factory extends AFactory
 {
+	public var kongApi:KongregateApi;
+	
 	private var _assetManager:AssetManager;
 	
 	

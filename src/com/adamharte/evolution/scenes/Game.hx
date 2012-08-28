@@ -11,6 +11,7 @@ import com.adamharte.evolution.actors.Dude;
 import com.adamharte.evolution.actors.Level;
 import com.adamharte.evolution.actors.ParallaxBackground;
 import com.adamharte.evolution.AssetManager;
+import com.adamharte.evolution.Factory;
 import com.adamharte.evolution.gui.LevelLabel;
 import com.adamharte.evolution.Session;
 import nme.ui.Mouse;
@@ -102,9 +103,11 @@ class Game extends Scene
 			
 			_session.currentLevel++;
 			_session.attemptNumber = 0;
+			cast(_kernel.factory, Factory).kongApi.stats.submit('BeatLevel', _session.currentLevel);
 			if (_session.currentLevel >= _session.totalLevels) 
 			{
 				//finished game.
+				cast(_kernel.factory, Factory).kongApi.stats.submit('BeatFinalLevel', _session.currentLevel);
 				_kernel.scenes.next();
 			}
 			else 
@@ -114,6 +117,7 @@ class Game extends Scene
 		}
 		else if (level.isOutOfBounds) 
 		{
+			cast(_kernel.factory, Factory).kongApi.stats.submit('Deaths', 1);
 			_gameOver();
 		}
 	}

@@ -31,6 +31,8 @@ class Dude extends PositionableEntity
 	private var _speed:Float;
 	private var _friction:Float;
 	private var _jumpFriction:Float;
+	private var _wasOnWheel:Bool;
+	private var _wasPressingUp:Bool;
 	
 	private var _dudeStand:PositionableEntity;
 	private var _dudeRun:PositionableEntity;
@@ -70,6 +72,8 @@ class Dude extends PositionableEntity
 		addEntity(_dudeJump , EAgenda.SUB_TYPE(_EDudeState.JUMP), true, 1);
 		addEntity(_dudeSleep , EAgenda.SUB_TYPE(_EDudeState.SLEEP), true, 1);
 		
+		_wasOnWheel = false;
+		_wasPressingUp = false;
 		_targetRotation = 0;
 		_runAccelerationBase = Math.PI * 0.03;
 		_runAcceleration = _runAccelerationBase;
@@ -156,21 +160,31 @@ class Dude extends PositionableEntity
 			
 			_runSpeed *= 1 - ( _friction * ( 1 - l_adjustedDelta ) );
 			
+			if (!_wasOnWheel) 
+			{
+				setAgenda(EAgenda.SUB_TYPE(_EDudeState.STAND));
+			}
+			
 			if ( _kernel.inputs.joypad.getIsButtonDown( EJoypadButton.UP ) )
 			{
-				var jumpPower:Float = 9;
-				var moveOffset:Float = _runSpeed * 15; // Takes the run speed into account for the jump angle.
-				_dx = Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower;
-				_dy = Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower;
-				distOffset = 6;
-				_runSpeed *= 0.2;
-				
-				_kernel.audio.start( "Jump", EAudioChannel.EFFECTS, 1, 0, .8 );
-				
-				setAgenda(EAgenda.SUB_TYPE(_EDudeState.JUMP));
+				if (!_wasPressingUp) 
+				{
+					var jumpPower:Float = 9;
+					var moveOffset:Float = _runSpeed * 15; // Takes the run speed into account for the jump angle.
+					_dx = Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower;
+					_dy = Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower;
+					distOffset = 6;
+					_runSpeed *= 0.2;
+					
+					_kernel.audio.start( "Jump", EAudioChannel.EFFECTS, 1, 0, .8 );
+					
+					setAgenda(EAgenda.SUB_TYPE(_EDudeState.JUMP));
+				}
+				_wasPressingUp = true;
 			}
 			else 
 			{
+				_wasPressingUp = false;
 				resetVelociyY();
 				
 				/*if (y > _currentWheel.y + (_currentWheel.radius * 0.3)) 
@@ -205,6 +219,8 @@ class Dude extends PositionableEntity
 			{
 				_currentWheel = null;
 			}*/
+			
+			_wasOnWheel = true;
 		}
 		else 
 		{
@@ -220,6 +236,8 @@ class Dude extends PositionableEntity
 			
 			_targetRotation = 0;
 			rotationSpeed = 0.05;
+			
+			_wasOnWheel = false;
 		}
 		
 		

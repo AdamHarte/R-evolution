@@ -3,11 +3,13 @@ package com.adamharte.evolution;
 import haxe.Log;
 import haxe.PosInfos;
 import haxe.Resource;
+import kong.KongregateApi;
 import nme.display.Sprite;
 import nme.events.Event;
 import nme.Lib;
 #if flash
 import org.flashdevelop.utils.FlashConnect;
+import kong.Kongregate;
 #end
 
 /**
@@ -17,14 +19,24 @@ import org.flashdevelop.utils.FlashConnect;
 
 class Main extends Sprite 
 {
+	#if debug
+	private var isDebug:Bool = true;
+	#else
+	private var isDebug:Bool = false;
+	#end
 	
-	static public function main() 
+	public function new() 
 	{
-		#if debug
-		var isDebug:Bool = true;
-		#else
-		var isDebug:Bool = false;
-		#end
+		super();
+		
+		if (stage != null) init();
+		else addEventListener(Event.ADDED_TO_STAGE, init);
+	}
+	
+	private function init(?e:Event = null):Void 
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, init);
+		
 		#if flash
 		if (isDebug)
 		{
@@ -34,9 +46,26 @@ class Main extends Sprite
 		{
 			Log.trace = function(v:Dynamic, ?infos:PosInfos):Void {};
 		}
+		
+		Kongregate.loadApi(onKongLoad);
 		#end
 		
-		var factory:Factory = new Factory(Lib.current, isDebug, Resource.getString('config'));
+		
+		
 	}
 	
+	private function onKongLoad(api:KongregateApi) 
+	{
+		api.services.connect();
+		
+		var factory:Factory = new Factory(Lib.current, isDebug, Resource.getString('config'));
+		factory.kongApi = api;
+	}
+	
+	
+	
+	static public function main() 
+	{
+		Lib.current.addChild(new Main());
+	}
 }

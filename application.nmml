@@ -3,10 +3,10 @@
 	<!-- NMML reference: https://gist.github.com/1763850 -->
 	
 	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
-	<meta title="Evolution" package="com.adamharte.evolution.Evolution" version="1.0.0" company="Adam Harte (adam@adamharte.com)" />
+	<meta title="R/evolution" package="com.adamharte.evolution.Evolution" version="1.0.0" company="Adam Harte (adam@adamharte.com)" />
 	
 	<!-- output -->
-	<app main="com.adamharte.evolution.Main" file="Evolution" path="bin" />
+	<app main="com.adamharte.evolution.Main" file="revolution" path="bin" />
 	
 	<window background="#000000" fps="60" />
 	<window width="800" height="480" unless="mobile" />
@@ -16,6 +16,7 @@
 	<source path="src" />
 	<haxelib name="nme" />
 	<haxelib name="awe6" />
+	<haxelib name="kong.hx" if="flash" />
 	
 	<!-- assets -->
 	<icon path="assets/nme.svg" />
