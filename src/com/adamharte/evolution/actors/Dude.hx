@@ -170,7 +170,7 @@ class Dude extends PositionableEntity
 				if (!_wasPressingUp) 
 				{
 					var jumpPower:Float = 9;
-					var moveOffset:Float = _runSpeed * 15; // Takes the run speed into account for the jump angle.
+					var moveOffset:Float = _tools.limit( _runSpeed * 15, -0.6, 0.6); // Takes the run speed into account for the jump angle.
 					_dx = Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower;
 					_dy = Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower;
 					distOffset = 6;
