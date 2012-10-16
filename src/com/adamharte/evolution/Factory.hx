@@ -12,10 +12,13 @@ import awe6.interfaces.IPreloader;
 import awe6.interfaces.IScene;
 import awe6.interfaces.ISession;
 import awe6.interfaces.ITextStyle;
+import awe6.interfaces.EKey;
 import com.adamharte.evolution.scenes.Game;
 import com.adamharte.evolution.scenes.Intro;
 import com.adamharte.evolution.scenes.Results;
+#if flash
 import kong.KongregateApi;
+#end
 
 /**
  * ...
@@ -41,6 +44,9 @@ class Factory extends AFactory
 		startingSceneType = EScene.INTRO;
 		targetFramerate = 60;
 		isFixedUpdates = false;
+		
+		keyPause = EKey.ESCAPE;
+		keyBack = EKey.BACKSPACE;
 	}
 	
 	override public function createAssetManager():IAssetManagerProcess
