@@ -192,6 +192,19 @@ class Dude extends PositionableEntity
 					distOffset = 20;
 				}*/
 				
+				#if debug
+				var context:Context = cast(view, AView).context;
+				context.graphics.clear();
+				context.graphics.lineStyle(1, 0xFF0000, 0.7);
+				var jumpPower:Float = 9;
+				var moveOffset:Float = _tools.limit( _runSpeed * 15, -0.6, 0.6);
+				context.graphics.moveTo(0, 0);
+				context.graphics.lineTo(
+					Math.cos(angleBetween + Math.PI + moveOffset) * jumpPower * 10,
+					Math.sin(angleBetween + Math.PI + moveOffset) * jumpPower * 10
+				);
+				#end
+				
 				if (Math.abs(_runSpeed) < 0.005) 
 				{
 					setAgenda(EAgenda.SUB_TYPE(_EDudeState.STAND));
